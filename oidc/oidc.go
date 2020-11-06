@@ -80,6 +80,7 @@ type Provider struct {
 	authURL     string
 	tokenURL    string
 	userInfoURL string
+	jwksURL     string
 	algorithms  []string
 
 	// Raw claims returned by the server.
@@ -164,6 +165,7 @@ func NewProvider(ctx context.Context, issuer string) (*Provider, error) {
 		userInfoURL:  p.UserInfoURL,
 		algorithms:   algs,
 		rawClaims:    body,
+		jwksURL:      p.JWKSURL,
 		remoteKeySet: NewRemoteKeySet(cloneContext(ctx), p.JWKSURL),
 	}, nil
 }
@@ -191,6 +193,11 @@ func (p *Provider) Claims(v interface{}) error {
 // Endpoint returns the OAuth2 auth and token endpoints for the given provider.
 func (p *Provider) Endpoint() oauth2.Endpoint {
 	return oauth2.Endpoint{AuthURL: p.authURL, TokenURL: p.tokenURL}
+}
+
+// JwksURL returns the JWKS URL for the given provider.
+func (p *Provider) JwksURL() string {
+	return p.jwksURL
 }
 
 // UserInfo represents the OpenID Connect userinfo claims.

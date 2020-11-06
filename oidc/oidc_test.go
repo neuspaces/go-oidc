@@ -110,6 +110,7 @@ func TestNewProvider(t *testing.T) {
 		wantAuthURL     string
 		wantTokenURL    string
 		wantUserInfoURL string
+		wantJwksURL     string
 		wantAlgorithms  []string
 		wantErr         bool
 	}{
@@ -124,6 +125,7 @@ func TestNewProvider(t *testing.T) {
 			}`,
 			wantAuthURL:    "https://example.com/auth",
 			wantTokenURL:   "https://example.com/token",
+			wantJwksURL:    "https://example.com/keys",
 			wantAlgorithms: []string{"RS256"},
 		},
 		{
@@ -137,6 +139,7 @@ func TestNewProvider(t *testing.T) {
 			}`,
 			wantAuthURL:    "https://example.com/auth",
 			wantTokenURL:   "https://example.com/token",
+			wantJwksURL:    "https://example.com/keys",
 			wantAlgorithms: []string{"RS256", "RS384", "ES256"},
 		},
 		{
@@ -152,6 +155,7 @@ func TestNewProvider(t *testing.T) {
 			}`,
 			wantAuthURL:    "https://example.com/auth",
 			wantTokenURL:   "https://example.com/token",
+			wantJwksURL:    "https://example.com/keys",
 			wantAlgorithms: []string{"RS256", "RS384", "ES256"},
 		},
 		{
@@ -177,6 +181,7 @@ func TestNewProvider(t *testing.T) {
 			trailingSlash:  true,
 			wantAuthURL:    "https://example.com/auth",
 			wantTokenURL:   "https://example.com/token",
+			wantJwksURL:    "https://example.com/keys",
 			wantAlgorithms: []string{"RS256"},
 		},
 		{
@@ -186,6 +191,7 @@ func TestNewProvider(t *testing.T) {
 			wantAuthURL:     "https://accounts.google.com/o/oauth2/v2/auth",
 			wantTokenURL:    "https://oauth2.googleapis.com/token",
 			wantUserInfoURL: "https://openidconnect.googleapis.com/v1/userinfo",
+			wantJwksURL:     "https://www.googleapis.com/oauth2/v3/certs",
 			wantAlgorithms:  []string{"RS256"},
 			data: `{
  "issuer": "ISSUER",
@@ -291,6 +297,10 @@ func TestNewProvider(t *testing.T) {
 			if p.userInfoURL != test.wantUserInfoURL {
 				t.Errorf("NewProvider() unexpected userInfoURL value, got=%s, want=%s",
 					p.userInfoURL, test.wantUserInfoURL)
+			}
+			if p.jwksURL != test.wantJwksURL {
+				t.Errorf("NewProvider() unexpected jwksURL value, got=%s, want=%s",
+					p.jwksURL, test.wantJwksURL)
 			}
 			if !reflect.DeepEqual(p.algorithms, test.wantAlgorithms) {
 				t.Errorf("NewProvider() unexpected algorithms value, got=%s, want=%s",
